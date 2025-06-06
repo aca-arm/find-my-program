@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>ACA Project Search</title>
+  <style>
+    body {
+      background-color: #111;
+      color: white;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 50px;
+    }
+    input[type="text"] {
+      padding: 10px;
+      width: 320px;
+      font-size: 16px;
+      border-radius: 5px;
+      border: none;
+      margin: 10px 5px;
+    }
+    ul {
+      list-style: none;
+      padding: 0;
+      width: 400px;
+      margin: 0 auto;
+    }
+    li {
+      background-color: #222;
+      margin: 5px 0;
+      padding: 10px;
+      border-radius: 5px;
+      transition: background 0.2s;
+    }
+    li:hover {
+      background-color: #444;
+    }
+    a {
+      color: #00aaff;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    #addProject, #removeProject {
+      margin: 10px 5px;
+      padding: 10px 15px;
+      font-size: 16px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    #addProject {
+      background-color: #00cc66;
+      color: white;
+    }
+    #removeProject {
+      background-color: #cc3333;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <h1>🔍 Search ACA Projects</h1>
+  <input type="text" id="searchInput" placeholder="Search by name or keyword..." oninput="updateResults()" />
+  <div>
+    <button id="addProject" onclick="promptPassword('add')">➕ Add Project</button>
+    <button id="removeProject" onclick="promptPassword('remove')">❌ Remove Project</button>
+  </div>
+  <ul id="results"></ul>
+
+  <script>
+    const PASSWORD = "devtools1234";
+    const STORAGE_KEY = "acaProjects";
+
+    let defaultProjects = [
+      {
+        keywords: ["calculator", "math", "aca"],
+        name: "ACA Calculator",
+        url: "https://aca-arm.github.io/ACA"
+      },
+      {
+        keywords: ["popcat", "clicker", "meme"],
+        name: "Popcat ACA",
+        url: "https://aca-arm.github.io/popcat_aca"
+      },
+      {
+        keywords: ["snake", "nokia", "classic"],
+        name: "Nokia Snake",
+        url: "https://aca-arm.github.io/nokiasnake"
+      },
+      {
+        keywords: ["geometry", "tile", "geode"],
+        name: "Geode",
+        url: "https://aca-arm.github.io/geode"
+      },
+      {
+        keywords: ["shoot", "war", "shooter", "battle", "gun"],
+        name: "Shoot",
+        url: "https://aca-arm.github.io/SHOOT"
+      }
+    ];
+
+    let projects = loadProjects();
+
+    function loadProjects() {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      return saved ? JSON.parse(saved) : defaultProjects;
+    }
+
+    function saveProjects() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(projects));
+    }
+
+    function updateResults() {
+      const input = document.getElementById("searchInput").value.toLowerCase().trim();
+      const resultsContainer = document.getElementById("results");
+      resultsContainer.innerHTML = "";
+
+      if (input === "") return;
+
+      const filtered = projects.filter(project =>
+        project.keywords.some(keyword => keyword.includes(input)) ||
+        project.name.toLowerCase().includes(input)
+      );
+
+      if (filtered.length > 0) {
+        filtered.forEach((p, i) => {
+          const li = document.createElement("li");
+          li.innerHTML = `<a href="${p.url}" target="_blank">${p.name}</a>`;
+          resultsContainer.appendChild(li);
+        });
+      } else {
+        resultsContainer.innerHTML = "<li>No matching projects found.</li>";
+      }
+    }
+
+    function promptPassword(action) {
+      const pass = prompt("Enter password:");
+      if (pass !== PASSWORD) return alert("Incorrect password.");
+
+      if (action === "add") {
+        const name = prompt("Project name:");
+        if (!name) return;
+
+        const url = prompt("Project URL:");
+        if (!url) return;
+
+        const keywords = prompt("Keywords (comma separated):");
+        if (!keywords) return;
+
+        projects.push({
+          name: name.trim(),
+          url: url.trim(),
+          keywords: keywords.toLowerCase().split(",").map(k => k.trim())
+        });
+
+        saveProjects();
+        alert("Project added!");
+        updateResults();
+      }
+
+      if (action === "remove") {
+        let list = "Projects:\n";
+        projects.forEach((p, i) => list += `${i + 1}. ${p.name}\n`);
+        const index = parseInt(prompt(`${list}\nEnter project number to remove:`)) - 1;
+
+        if (isNaN(index) || index < 0 || index >= projects.length) {
+          alert("Invalid selection.");
+          return;
+        }
+
+        if (confirm(`Delete "${projects[index].name}"?`)) {
+          projects.splice(index, 1);
+          saveProjects();
+          updateResults();
+          alert("Project removed.");
+        }
+      }
+    }
+
+    updateResults();
+  </script>
+</body>
+</html>
