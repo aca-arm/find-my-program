@@ -1,0 +1,27 @@
+[
+  {
+    "name": "ACA Calculator",
+    "url": "https://aca-arm.github.io/ACA",
+    "keywords": ["calculator", "math", "aca"]
+  },
+  {
+    "name": "Popcat ACA",
+    "url": "https://aca-arm.github.io/popcat_aca",
+    "keywords": ["popcat", "clicker", "meme"]
+  },
+  {
+    "name": "Nokia Snake",
+    "url": "https://aca-arm.github.io/nokiasnake",
+    "keywords": ["snake", "nokia", "classic"]
+  },
+  {
+    "name": "Geode",
+    "url": "https://aca-arm.github.io/geode",
+    "keywords": ["geometry", "tile", "geode"]
+  },
+  {
+    "name": "Shoot",
+    "url": "https://aca-arm.github.io/SHOOT",
+    "keywords": ["shoot", "war", "shooter", "battle", "gun"]
+  }
+]
